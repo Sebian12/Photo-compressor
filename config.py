@@ -3,7 +3,36 @@ import os
 import sys
 from CTkMessagebox import CTkMessagebox
 
-DEFAULT_EXIF_REMOVE = {"gps": False, "camera": False, "datetime": False, "author": False, "software": False}
+
+EXIF_FIELDS = {
+    "Location": [
+        ("gps", 34853, "GPS location"),
+    ],
+    "Camera": [
+        ("make", 271, "Camera make"),
+        ("model", 272, "Camera model"),
+        ("lens_make", 42035, "Lens make"),
+        ("lens_model", 42036, "Lens model"),
+        ("exposure_time", 33434, "Exposure time"),
+        ("f_number", 33437, "F-number"),
+        ("iso", 34855, "ISO"),
+        ("focal_length", 37386, "Focal length"),
+    ],
+    "Date & Time": [
+        ("date_time", 306, "Date/time (modified)"),
+        ("date_time_original", 36867, "Date/time (original)"),
+        ("date_time_digitized", 36868, "Date/time (digitized)"),
+    ],
+    "Author": [
+        ("artist", 315, "Artist"),
+        ("copyright", 33432, "Copyright"),
+    ],
+    "Software": [
+        ("software", 305, "Software"),
+    ],
+}
+
+DEFAULT_EXIF_REMOVE = {key: False for fields in EXIF_FIELDS.values() for key, _, _ in fields}
 
 # Configuration file path
 if hasattr(sys, '_MEIPASS'):

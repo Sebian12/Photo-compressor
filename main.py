@@ -130,9 +130,10 @@ def compress_single_file(file, compress_value, used_paths):
         # Only touch EXIF at all if the user actually wants it kept
         if settings.preserve_exif:
             exif_data = img.getexif()
-
-            if settings.exif_remove["gps"]:
-                exif_data.pop(34853, None)  # 34853 is a tag for GPSInfo
+            for fields in config.EXIF_FIELDS.values():
+                for key, tag_id, _ in fields:
+                    if settings.exif_remove[key]:
+                        exif_data.pop(tag_id, None)
         else:
             exif_data = None
 

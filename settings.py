@@ -6,14 +6,14 @@ import platform
 import sys
 import os
 
-import utils
+import utils, exif_options
 
 # Default settings
 appearance_mode = "light"
 output_folder = ""
 thumb_size = 100
 preserve_exif = False
-exif_remove = {"gps": False, "camera": False, "datetime": False, "author": False, "software": False}
+exif_remove = dict(config.DEFAULT_EXIF_REMOVE)  # Initialize exif_remove with default values
 
 utils.resource_path("assets/logo.ico")  # Preload the resource path to avoid issues with PyInstaller
 
@@ -32,19 +32,16 @@ def theme(mode):
         ctk.set_appearance_mode(appearance_mode)
     save_settings()
 
-def exif_metadata(gps_data):
+def exif_metadata(exif_button):
     global preserve_exif
     preserve_exif = not preserve_exif
 
-    if not preserve_exif and exif_remove["gps"]:
-        exif_remove["gps"] = False
-        gps_data.deselect()
+    if not preserve_exif:
+        for key in exif_remove:
+            exif_remove[key] = False
 
     save_settings()
-    if preserve_exif:
-        gps_data.configure(state="normal")
-    else:
-        gps_data.configure(state="disabled")
+    exif_button.configure(state="normal" if preserve_exif else "disabled")
 
 def toggle_exif_category(category):
     exif_remove[category] = not exif_remove[category]
@@ -92,11 +89,10 @@ def open_settings(app):
     switch_mode = ctk.CTkSwitch(settings_window, text="Dark mode", variable=switch_var, command=lambda: theme("light" if switch_var.get() == 1 else "dark"))
 
     switch_exif_var = ctk.IntVar(value=1 if preserve_exif else 0)
-    switch_exif = ctk.CTkSwitch(settings_window, text="Preserve EXIF metadata", variable=switch_exif_var, command=lambda: exif_metadata(gps_data))
+    switch_exif = ctk.CTkSwitch(settings_window, text="Preserve EXIF metadata", variable=switch_exif_var, command=lambda: exif_metadata(exif_button))
 
-    gps_var = ctk.IntVar(value=1 if exif_remove["gps"] else 0)
-    gps_data = ctk.CTkCheckBox(settings_window, text="Remove GPS data", variable=gps_var, command=lambda: toggle_exif_category("gps"))
-    gps_data.configure(state="normal" if preserve_exif else "disabled")
+    exif_button = ctk.CTkButton(settings_window, text="More EXIF options", command=lambda: exif_options.open_exif_options(settings_window, exif_remove, toggle_exif_category))
+    exif_button.configure(state="normal" if preserve_exif else "disabled")
 
     folder_label = ctk.CTkLabel(settings_window, text=output_folder if output_folder != "" else "No folder selected")
     folder_button = ctk.CTkButton(settings_window, text="Select output folder",command=lambda: select_folder(folder_label))
@@ -109,7 +105,7 @@ def open_settings(app):
     # What you can see
     switch_mode.pack(side="top", fill="x", padx=10, pady=5)
     switch_exif.pack(side="top", fill="x", padx=10)
-    gps_data.pack(side="top", fill="x", padx=10, pady=5)
+    exif_button.pack(side="top", fill="x", padx=10, pady=5)
 
     folder_button.pack(side="bottom", fill="x", padx=10, pady=5)
     folder_label.pack(side="bottom", fill="x", padx=10, pady=1)
