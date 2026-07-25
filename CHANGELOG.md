@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.11.0
+
+### New Features
+- Added granular EXIF metadata control: a new "More EXIF options" window (opened from Settings, enabled only while "Preserve EXIF metadata" is on) lets you selectively strip individual EXIF fields instead of an all-or-nothing choice — grouped into Location (GPS), Camera (make, model, lens make/model, exposure time, F-number, ISO, focal length), Date & Time (modified, original, digitized), Author (artist, copyright), and Software
+- Turning off "Preserve EXIF metadata" now resets all individual field selections back to off, rather than remembering them for next time
+
+### Maintenance
+- `compress_single_file()` now builds EXIF data from a single consistent source (`img.getexif()`) instead of switching between raw EXIF bytes and a different object type depending on settings, which could silently produce inconsistent results
+- Replaced the old standalone `remove_gps` setting with the unified `exif_remove` structure shared by all metadata fields; existing config files with the old setting are migrated automatically on first load
+- Centralized the list of available EXIF fields, their tag IDs, and default state in `config.py` (`EXIF_FIELDS` / `DEFAULT_EXIF_REMOVE`) as a single source of truth
+
 ## v1.10.5
 
 ### Maintenance
