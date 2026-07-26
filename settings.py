@@ -14,6 +14,7 @@ output_folder = ""
 thumb_size = 100
 preserve_exif = False
 exif_remove = dict(config.DEFAULT_EXIF_REMOVE)  # Initialize exif_remove with default values
+exif_window = None
 
 utils.resource_path("assets/logo.ico")  # Preload the resource path to avoid issues with PyInstaller
 
@@ -67,7 +68,13 @@ def select_folder(label):
         CTkMessagebox(title="Done", message="Selected output folder: " + output_folder, icon="check")
         save_settings()
 
-
+def show_exif_options(app):
+    global exif_window
+    if exif_window is None or not exif_window.winfo_exists():
+        exif_window = exif_options.open_exif_options(app, exif_remove, toggle_exif_category)
+    else:
+        exif_window.lift()
+        exif_window.focus_force()
 
 def open_settings(app):
     settings_window = ctk.CTkToplevel(master=app)
@@ -91,7 +98,7 @@ def open_settings(app):
     switch_exif_var = ctk.IntVar(value=1 if preserve_exif else 0)
     switch_exif = ctk.CTkSwitch(settings_window, text="Preserve EXIF metadata", variable=switch_exif_var, command=lambda: exif_metadata(exif_button))
 
-    exif_button = ctk.CTkButton(settings_window, text="More EXIF options", command=lambda: exif_options.open_exif_options(settings_window, exif_remove, toggle_exif_category))
+    exif_button = ctk.CTkButton(settings_window, text="More EXIF options", command=lambda: show_exif_options(settings_window))
     exif_button.configure(state="normal" if preserve_exif else "disabled")
 
     folder_label = ctk.CTkLabel(settings_window, text=output_folder if output_folder != "" else "No folder selected")

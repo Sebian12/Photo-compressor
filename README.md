@@ -73,7 +73,7 @@ python main.py
 - [x] Optimization (1.8.0)
 - [x] EXIF metadata preservation (1.9.0)
 - [x] Granular metadata control in settings (only GPS data checkbox) (1.10.0)
-- [ ] More metadata control in settings (1.11.0)
+- [x] More metadata control in settings (1.11.0)
 - [ ] New file format support (1.12.0)
 - [ ] Pack compressed photos to zip (1.13.0)
 - [ ] Multithreading (planned)

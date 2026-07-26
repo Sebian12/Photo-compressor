@@ -3,8 +3,8 @@ import config, utils
 import platform
 from tkinter import PhotoImage
 
+utils.resource_path("assets/logo.ico")
 
-utils.resource_path("assets/logo.ico") 
 
 def open_exif_options(parent, exif_remove, toggle_callback):
     exif_window = ctk.CTkToplevel(parent)
@@ -33,4 +33,6 @@ def open_exif_options(parent, exif_remove, toggle_callback):
             checkbox = ctk.CTkCheckBox(frame, text=f"Remove {label}", variable=var, command=lambda k=key: toggle_callback(k))
             checkbox.pack(side="top", fill="x", padx=10, pady=5)
     frame.pack(fill="both", expand=True)
+
+    return exif_window
 
