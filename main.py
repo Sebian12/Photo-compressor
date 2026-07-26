@@ -130,10 +130,12 @@ def compress_single_file(file, compress_value, used_paths):
         # Only touch EXIF at all if the user actually wants it kept
         if settings.preserve_exif:
             exif_data = img.getexif()
+            exif_sub_ifd = exif_data.get_ifd(0x8769)
             for fields in config.EXIF_FIELDS.values():
                 for key, tag_id, _ in fields:
                     if settings.exif_remove[key]:
                         exif_data.pop(tag_id, None)
+                        exif_sub_ifd.pop(tag_id, None)
         else:
             exif_data = None
 
