@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.11.1
+
+### Bugfixes
+- Fixed granular EXIF field removal not working for fields stored in the Exif sub-IFD (lens make/model, exposure time, F-number, ISO, focal length, date/time original, date/time digitized) — `compress_single_file()` only popped tags from the main IFD via `img.getexif()`, so these checkboxes in "More EXIF options" had no effect on the saved file; it now also pops from `exif_data.get_ifd(0x8769)`
+- Fixed "More EXIF options" opening a new window on every click instead of reusing the existing one — `open_exif_options()` never returned the window it created, so `show_exif_options()`'s open-window check always saw `None`
+- Fixed the EXIF Options window staying open and interactive after "Preserve EXIF metadata" is turned off, letting stale checkbox changes get saved even while EXIF preservation was disabled — the window now closes automatically alongside the field reset
+
+### Maintenance
+- Replaced a stale fallback default for `exif_remove` in `main.py` (leftover flat structure from before the v1.11.0 refactor) with `config.DEFAULT_EXIF_REMOVE`, matching the schema actually used elsewhere
+
 ## v1.11.0
 
 ### New Features

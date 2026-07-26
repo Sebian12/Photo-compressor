@@ -40,6 +40,8 @@ def exif_metadata(exif_button):
     if not preserve_exif:
         for key in exif_remove:
             exif_remove[key] = False
+        if exif_window is not None and exif_window.winfo_exists():
+            exif_window.destroy()
 
     save_settings()
     exif_button.configure(state="normal" if preserve_exif else "disabled")
