@@ -126,9 +126,12 @@ def compress_single_file(file, compress_value, used_paths):
     file_size = os.path.getsize(file)
     try:
         img = Image.open(file)
-
+    except (OSError, Image.UnidentifiedImageError):
+        CTkMessagebox(title="ERROR04", message="File corrupted or doesn't exist!", icon="cancel")
+        return None
         # Only touch EXIF at all if the user actually wants it kept
-        if settings.preserve_exif:
+    if settings.preserve_exif:
+        try:
             exif_data = img.getexif()
             exif_sub_ifd = exif_data.get_ifd(0x8769)
             for fields in config.EXIF_FIELDS.values():
@@ -136,12 +139,11 @@ def compress_single_file(file, compress_value, used_paths):
                     if settings.exif_remove[key]:
                         exif_data.pop(tag_id, None)
                         exif_sub_ifd.pop(tag_id, None)
-        else:
-            exif_data = None
-
-    except (OSError, Image.UnidentifiedImageError):
-        CTkMessagebox(title="ERROR04", message="File corrupted or doesn't exist!", icon="cancel")
-        return None
+        except (OSError, Image.UnidentifiedImageError):
+            img.close()
+            CTkMessagebox(title="ERROR10", message="Couldn't load exif metadata. File skipped.", icon="cancel")
+    else:
+        exif_data = None
 
     # Checking if user selected output folder
     if settings.output_folder != "":
@@ -154,7 +156,7 @@ def compress_single_file(file, compress_value, used_paths):
     # within the same batch
     output_path = base_path
     counter = 1
-    while output_path in used_paths:
+    while output_path in used_paths or os.path.exists(output_path):
         output_path = os.path.splitext(base_path)[0] + f"_{counter}" + ext
         counter += 1
     was_renamed = output_path != base_path
@@ -169,7 +171,7 @@ def compress_single_file(file, compress_value, used_paths):
                 img.save(output_path, quality=compress_value)
         elif ext.lower() == ".png":
             # exif metadata is not supported in png files.
-            img.save(output_path, optimize=True, compress_level=compress_value // 10)
+            img.save(output_path, compress_level = (100 - compress_value) // 10)
     except OSError:
         CTkMessagebox(title="ERROR06", message="Could not save file: " + os.path.basename(file), icon="cancel")
         return None

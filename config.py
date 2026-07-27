@@ -83,7 +83,7 @@ def load_config():
                     "preserve_exif": data.get("preserve_exif", False),
                     "exif_remove": exif_remove,
                 }
-        except (json.JSONDecodeError, KeyError):
-            pass
+        except (json.JSONDecodeError, KeyError, OSError):
+            CTkMessagebox(title="ERROR09", message="Could not load config file!", icon="cancel")
     # If file doesn't exist or is corrupted, return default settings
     return {"appearance_mode": "light", "output_folder": "", "thumb_size": 100, "preserve_exif": False, "exif_remove": dict(DEFAULT_EXIF_REMOVE)}
