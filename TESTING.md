@@ -5,7 +5,7 @@
 - ERROR03 - File doesn't exist!
 - ERROR04 - File corrupted or doesn't exist!
 - ERROR05 - Cannot load thumbnail for: "file_name" 
-- ERROR06 - Could not save file" "file_name"
+- ERROR06 - Could not save file: "file_name"
 - ERROR07 - Output folder no longer exists! Please select it again in settings.
 - ERROR08 - Could not save config file!
 - ERROR09 - Could not load config file!

@@ -66,6 +66,7 @@ def select_photos():
                     thumbnails.thumbnail((settings.thumb_size, settings.thumb_size))
                     thumb_img = ctk.CTkImage(light_image=thumbnails, dark_image=thumbnails, size=(settings.thumb_size, settings.thumb_size))
                     thumb_lbl = ctk.CTkLabel(row, image=thumb_img, text="")
+                    thumbnails.close()
                     thumb_lbl.pack(side="left", padx=10, pady=10)
                     thumbnail_refs[file] = thumb_img
 
