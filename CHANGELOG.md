@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.12.0
+
+### New Features
+- Added WebP (`.webp`) and AVIF (`.avif`) support — both compress through the same quality-based path as JPG, including EXIF preservation
+- Redesigned settings button as a small icon button in the top-right corner instead of a full-width text button
+
+### Bugfixes
+- Fixed PNG compression ignoring the quality slider entirely — `optimize=True` was silently overriding `compress_level`; removed `optimize=True` and inverted the `compress_level` mapping so higher quality now means less compression (larger file), consistent with JPG/WebP/AVIF
+- Fixed re-compressing a file silently overwriting its previous "_compressed" output from an earlier run — the rename logic now also checks `os.path.exists()`, not just in-batch collisions
+- Fixed an unhandled `ValueError` crashing the whole batch when EXIF metadata failed to parse — EXIF handling now has its own try/except separate from opening the file, with a dedicated ERROR10 message instead of the misleading "file corrupted"
+- Fixed `resource_path()` resolving assets relative to the process's working directory instead of the app's actual location — could break icon loading depending on how the app was launched
+- Fixed the settings icon being loaded with a hardcoded relative path instead of `resource_path()`, opened twice, and never closed
+- `select_photos()` thumbnails are now explicitly closed after generating the preview instead of relying on garbage collection
+
 ## v1.11.1
 
 ### Bugfixes

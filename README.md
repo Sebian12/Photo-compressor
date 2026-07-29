@@ -1,6 +1,6 @@
 # SnapPress
 
-A desktop application for compressing JPEG and PNG photos without visible quality loss. Built with Python and customtkinter.
+A desktop application for compressing JPEG, PNG, AVIF and WEBP photos without visible quality loss. Built with Python and customtkinter.
 
 ![Python](https://img.shields.io/badge/Python-3.14-blue) ![Pillow](https://img.shields.io/badge/Pillow-12.x-green) ![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey)
 
@@ -74,7 +74,7 @@ python main.py
 - [x] EXIF metadata preservation (1.9.0)
 - [x] Granular metadata control in settings (only GPS data checkbox) (1.10.0)
 - [x] More metadata control in settings (1.11.0)
-- [ ] New file format support (1.12.0)
+- [x] New file format support (1.12.0)
 - [ ] Pack compressed photos to zip (1.13.0)
 - [ ] Multithreading (planned)
 - [ ] Drag & Drop support (planned)

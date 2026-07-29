@@ -45,11 +45,11 @@ def remove_file(file, row):
 def select_photos():
     skipped = 0
     if platform.system() == "Windows":
-        filetypes = (("Photos", "*.png *.jpg *.jpeg"), ("All Files", "*.*"))
+        filetypes = (("Photos", "*.png *.jpg *.jpeg *.avif *.webp"), ("All Files", "*.*"))
         initial_dir = "/"
     else:
         # Known issues - while using Photos filter it doesn't see .jpg files
-        filetypes = (("All Files", "*.*"), ("Photos", "*.png *.jpg *.jpeg"))
+        filetypes = (("All Files", "*.*"), ("Photos", "*.png *.jpg *.jpeg *.avif *.webp"))
         # starting from /home in Linux because starting from / is not user-friendly
         initial_dir = "/home"
 
@@ -115,7 +115,7 @@ def compress_single_file(file, compress_value, used_paths):
     name, ext = os.path.splitext(file)
 
     # Checks file type
-    if ext.lower() not in [".jpg", ".jpeg", ".png"]:
+    if ext.lower() not in [".jpg", ".jpeg", ".png", ".webp", ".avif"]:
         CTkMessagebox(title="ERROR02", message="File not supported!", icon="cancel")
         return None
 
@@ -143,6 +143,7 @@ def compress_single_file(file, compress_value, used_paths):
         except (OSError, Image.UnidentifiedImageError):
             img.close()
             CTkMessagebox(title="ERROR10", message="Couldn't load exif metadata. File skipped.", icon="cancel")
+            return None
     else:
         exif_data = None
 
@@ -165,7 +166,7 @@ def compress_single_file(file, compress_value, used_paths):
 
     try:
         # Compression is different in .jpg and .png
-        if ext.lower() in [".jpg", ".jpeg"]:
+        if ext.lower() in [".jpg", ".jpeg", ".webp", ".avif"]:
             if exif_data is not None:
                 img.save(output_path, quality=compress_value, exif=exif_data)
             else:
@@ -289,7 +290,9 @@ else:
 app.geometry("600x750")
 
 # Settings
-settings_icon = ctk.CTkImage(light_image=Image.open("assets/settings.png"), dark_image=Image.open("assets/settings.png"), size=(48,48))
+settings_img = Image.open(utils.resource_path("assets/settings.png"))
+settings_icon = ctk.CTkImage(light_image=settings_img, dark_image=settings_img, size=(48, 48))
+settings_img.close()
 settings_button = ctk.CTkButton(app, image=settings_icon, text="", command=lambda: show_settings(app), width=40, fg_color=("#E5E5E5", "#313233"), hover_color=("#D0D0D0", "#404142"),)
 settings_button.pack(padx=5, pady=5, anchor="e")
 
@@ -297,7 +300,7 @@ settings_button.pack(padx=5, pady=5, anchor="e")
 drop_frame = ctk.CTkFrame(app, height=120, border_width=2)
 drop_frame.pack(padx=20, pady=20, fill="x")
 
-drop_label = ctk.CTkLabel(drop_frame, text="Click to select photos\nJPG, PNG", font=("Arial", 13))
+drop_label = ctk.CTkLabel(drop_frame, text="Click to select photos\nJPG, PNG, AVIF, WEBP", font=("Arial", 13))
 drop_label.pack(expand=True, pady=40)
 
 drop_frame.bind("<Button-1>", lambda e: select_photos())
@@ -351,6 +354,6 @@ progress.set(0)
 btn_compress = ctk.CTkButton(app, text="Compress and save", command=compress)
 btn_compress.pack(pady=10)
 
-ctk.CTkLabel(app, text="v1.12.0-beta1", text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5))
+ctk.CTkLabel(app, text="v1.12.0", text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5))
 
 app.mainloop()
