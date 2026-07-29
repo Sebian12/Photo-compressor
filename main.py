@@ -288,8 +288,9 @@ else:
 app.geometry("600x750")
 
 # Settings
-settings_button = ctk.CTkButton(app, text="Settings", command=lambda: show_settings(app))
-settings_button.pack(padx=10, pady=10, fill="x")
+settings_icon = ctk.CTkImage(light_image=Image.open("assets/settings.png"), dark_image=Image.open("assets/settings.png"), size=(48,48))
+settings_button = ctk.CTkButton(app, image=settings_icon, text="", command=lambda: show_settings(app), width=40, fg_color=("#E5E5E5", "#313233"), hover_color=("#D0D0D0", "#404142"),)
+settings_button.pack(padx=5, pady=5, anchor="e")
 
 # Drag & Drop (also clickable)
 drop_frame = ctk.CTkFrame(app, height=120, border_width=2)
@@ -349,6 +350,6 @@ progress.set(0)
 btn_compress = ctk.CTkButton(app, text="Compress and save", command=compress)
 btn_compress.pack(pady=10)
 
-ctk.CTkLabel(app, text="v1.11.1", text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5))
+ctk.CTkLabel(app, text="v1.12.0-beta1", text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5))
 
 app.mainloop()
