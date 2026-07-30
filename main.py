@@ -172,8 +172,10 @@ def compress_single_file(file, compress_value, used_paths):
             else:
                 img.save(output_path, quality=compress_value)
         elif ext.lower() == ".png":
-            # exif metadata is not supported in png files.
-            img.save(output_path, compress_level = (100 - compress_value) // 10)
+            if exif_data is not None:
+                img.save(output_path, compress_level=(100 - compress_value) // 10, exif=exif_data)
+            else:
+                img.save(output_path, compress_level=(100 - compress_value) // 10)
     except OSError, ValueError:
         CTkMessagebox(title="ERROR06", message="Could not save file: " + os.path.basename(file), icon="cancel")
         return None
