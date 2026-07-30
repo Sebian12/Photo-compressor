@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.12.2
+
+### UI/UX
+- Realigned the photo selection drop area next to the settings icon button using a shared top container for a cleaner, side-by-side header layout
+- Fixed the photo selection frame ignoring fixed `width` settings by disabling Tkinter's geometry propagation and enforcing responsive horizontal scaling (`fill="x"`)
+
 ## v1.12.1
 
 ### New Features

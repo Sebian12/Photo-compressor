@@ -293,21 +293,26 @@ else:
 
 app.geometry("600x750")
 
-# Settings
-settings_img = Image.open(utils.resource_path("assets/settings.png"))
-settings_icon = ctk.CTkImage(light_image=settings_img, dark_image=settings_img, size=(48, 48))
-settings_button = ctk.CTkButton(app, image=settings_icon, text="", command=lambda: show_settings(app), width=40, fg_color=("#E5E5E5", "#313233"), hover_color=("#D0D0D0", "#404142"),)
-settings_button.pack(padx=5, pady=5, anchor="e")
+# Invicible frame on top of drop_frame and settings button
+top_container = ctk.CTkFrame(app, fg_color="transparent")
+top_container.pack(fill="x", padx=20, pady=(10, 10))
 
-# Drag & Drop (also clickable)
-drop_frame = ctk.CTkFrame(app, height=120, border_width=2)
-drop_frame.pack(padx=20, pady=20, fill="x")
+# Button (later drag&drop)
+drop_frame = ctk.CTkFrame(top_container, height=120, border_width=2)
+drop_frame.pack_propagate(False)
+drop_frame.pack(side="left", fill="x", expand=True, padx=(0, 10))
 
 drop_label = ctk.CTkLabel(drop_frame, text="Click to select photos\nJPG, PNG, AVIF, WEBP", font=("Arial", 13))
-drop_label.pack(expand=True, pady=40)
+drop_label.pack(pady=40)
 
 drop_frame.bind("<Button-1>", lambda e: select_photos())
 drop_label.bind("<Button-1>", lambda e: select_photos())
+
+# Settings button
+settings_img = Image.open(utils.resource_path("assets/settings.png"))
+settings_icon = ctk.CTkImage(light_image=settings_img, dark_image=settings_img, size=(48, 48))
+settings_button = ctk.CTkButton(top_container, image=settings_icon, text="", command=lambda: show_settings(app), width=40, fg_color=("#E5E5E5", "#313233"), hover_color=("#D0D0D0", "#404142"))
+settings_button.pack(side="right", anchor="n")
 
 # Frame with pictures
 counter_frame = ctk.CTkFrame(app, fg_color="transparent")
@@ -317,10 +322,10 @@ counter_lbl = ctk.CTkLabel(counter_frame, text="Selected files: 0", font=("Arial
 counter_lbl.pack(side="left")
 
 clear_list_btn = ctk.CTkButton(counter_frame, text="Clear list", command=clear_list, width=80)
-clear_list_btn.pack(side="right")
+clear_list_btn.pack(side="right", pady=5)
 
 # Shows loaded photos
-files_frame = ctk.CTkScrollableFrame(app, height=150)
+files_frame = ctk.CTkScrollableFrame(app, height=300)
 files_frame.pack(padx=20, fill="x")
 
 # Label that shows how compressed picture will get
@@ -357,6 +362,6 @@ progress.set(0)
 btn_compress = ctk.CTkButton(app, text="Compress and save", command=compress)
 btn_compress.pack(pady=10)
 
-ctk.CTkLabel(app, text="v1.12.1", text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5))
+ctk.CTkLabel(app, text="v1.12.2", text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5))
 
 app.mainloop()
