@@ -174,7 +174,7 @@ def compress_single_file(file, compress_value, used_paths):
         elif ext.lower() == ".png":
             # exif metadata is not supported in png files.
             img.save(output_path, compress_level = (100 - compress_value) // 10)
-    except OSError:
+    except OSError, ValueError:
         CTkMessagebox(title="ERROR06", message="Could not save file: " + os.path.basename(file), icon="cancel")
         return None
     finally:
@@ -354,6 +354,6 @@ progress.set(0)
 btn_compress = ctk.CTkButton(app, text="Compress and save", command=compress)
 btn_compress.pack(pady=10)
 
-ctk.CTkLabel(app, text="v1.12.0", text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5))
+ctk.CTkLabel(app, text="v1.12.1", text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5))
 
 app.mainloop()
