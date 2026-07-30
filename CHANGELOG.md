@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.12.1
+
+### New Features
+- PNG files now preserve EXIF metadata too (previously only JPG/WebP/AVIF did, even with "Preserve EXIF metadata" turned on)
+
+### Bugfixes
+- Fixed a crash on startup when building the settings icon button — `CTkImage` doesn't render at construction time, it re-renders lazily every time it's actually drawn; closing the source `PIL.Image` right after building the `CTkImage` meant the very first draw already hit a closed file
+- Fixed the same latent issue in `select_photos()` thumbnails, which hadn't crashed yet by luck but would have broken the moment dark/light mode was toggled while photos were loaded
+- Fixed `load_config()` showing a config-load-error messagebox before the app's Tk root window existed, which silently spawned a hidden, orphaned second root window
+- Fixed compressing images wider or taller than 16383px as WebP crashing the whole batch instead of just failing that one file
+
 ## v1.12.0
 
 ### New Features
