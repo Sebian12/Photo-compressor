@@ -66,7 +66,6 @@ def select_photos():
                     thumbnails.thumbnail((settings.thumb_size, settings.thumb_size))
                     thumb_img = ctk.CTkImage(light_image=thumbnails, dark_image=thumbnails, size=(settings.thumb_size, settings.thumb_size))
                     thumb_lbl = ctk.CTkLabel(row, image=thumb_img, text="")
-                    thumbnails.close()
                     thumb_lbl.pack(side="left", padx=10, pady=10)
                     thumbnail_refs[file] = thumb_img
 
@@ -282,6 +281,9 @@ ctk.set_default_color_theme("blue")
 app = ctk.CTk()
 app.title("SnapPress")
 
+if settings_saver.get("load_error"):
+    CTkMessagebox(title="ERROR09", message="Could not load config file!", icon="cancel")
+
 if platform.system() == "Windows":
     app.iconbitmap(utils.resource_path("assets/logo.ico"))
 else:
@@ -294,7 +296,6 @@ app.geometry("600x750")
 # Settings
 settings_img = Image.open(utils.resource_path("assets/settings.png"))
 settings_icon = ctk.CTkImage(light_image=settings_img, dark_image=settings_img, size=(48, 48))
-settings_img.close()
 settings_button = ctk.CTkButton(app, image=settings_icon, text="", command=lambda: show_settings(app), width=40, fg_color=("#E5E5E5", "#313233"), hover_color=("#D0D0D0", "#404142"),)
 settings_button.pack(padx=5, pady=5, anchor="e")
 
