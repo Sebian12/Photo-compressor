@@ -1,4 +1,5 @@
 import os
+import webbrowser
 import customtkinter as ctk
 from tkinter import filedialog, PhotoImage
 from CTkMessagebox import CTkMessagebox
@@ -233,7 +234,9 @@ def compress():
         unlock_ui()
 
     # Calculating space
-    if total_before == 0: return
+    if total_before == 0:
+        CTkMessagebox(title="ERROR11", message="No files were successfully compressed!", icon="cancel")
+        return
     total_difference = (total_before - total_after) / MB
     total_difference_percent = (total_before - total_after) / total_before * 100
 
@@ -297,7 +300,7 @@ app.geometry("600x750")
 top_container = ctk.CTkFrame(app, fg_color="transparent")
 top_container.pack(fill="x", padx=20, pady=(10, 10))
 
-# Button (later drag&drop)
+# Button (later drag&drop) / Left side of top_container
 drop_frame = ctk.CTkFrame(top_container, height=120, border_width=2)
 drop_frame.pack_propagate(False)
 drop_frame.pack(side="left", fill="x", expand=True, padx=(0, 10))
@@ -308,11 +311,21 @@ drop_label.pack(pady=40)
 drop_frame.bind("<Button-1>", lambda e: select_photos())
 drop_label.bind("<Button-1>", lambda e: select_photos())
 
-# Settings button
+# Right side of top_container
+right_container = ctk.CTkFrame(top_container, fg_color="transparent")
+right_container.pack(side="right")
+
+# Settings & GitHub buttons / Right side of top_container
 settings_img = Image.open(utils.resource_path("assets/settings.png"))
 settings_icon = ctk.CTkImage(light_image=settings_img, dark_image=settings_img, size=(48, 48))
-settings_button = ctk.CTkButton(top_container, image=settings_icon, text="", command=lambda: show_settings(app), width=40, fg_color=("#E5E5E5", "#313233"), hover_color=("#D0D0D0", "#404142"))
-settings_button.pack(side="right", anchor="n")
+settings_button = ctk.CTkButton(right_container, image=settings_icon, text="", command=lambda: show_settings(app), width=40, fg_color=("#E5E5E5", "#313233"), hover_color=("#D0D0D0", "#404142"))
+settings_button.pack(side="top", anchor="n", pady=5)
+
+# GitHub button
+github_img = Image.open(utils.resource_path("assets/github.png"))
+github_icon = ctk.CTkImage(light_image=github_img, dark_image=github_img, size=(48, 48))
+github_button = ctk.CTkButton(right_container, image=github_icon, text="", command=lambda: webbrowser.open("https://github.com/Sebian12/SnapPress"), width=40, fg_color=("#E5E5E5", "#313233"), hover_color=("#D0D0D0", "#404142"))
+github_button.pack(side="top", anchor="s", pady=5)
 
 # Frame with pictures
 counter_frame = ctk.CTkFrame(app, fg_color="transparent")

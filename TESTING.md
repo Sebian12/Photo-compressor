@@ -10,6 +10,7 @@
 - ERROR08 - Could not save config file!
 - ERROR09 - Could not load config file!
 - ERROR10 - Couldn't load exif metadata. File skipped.
+- ERROR11 - No files were successfully compressed!
 
 ## Warnings
 
