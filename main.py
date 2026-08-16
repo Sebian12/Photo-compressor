@@ -175,7 +175,7 @@ def compress_single_file(file, compress_value, used_paths):
                 img.save(output_path, compress_level=(100 - compress_value) // 10, exif=exif_data)
             else:
                 img.save(output_path, compress_level=(100 - compress_value) // 10)
-    except OSError, ValueError:
+    except (OSError, ValueError):
         CTkMessagebox(title="ERROR06", message="Could not save file: " + os.path.basename(file), icon="cancel")
         return None
     finally:
