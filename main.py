@@ -126,7 +126,7 @@ def compress_single_file(file, compress_value, used_paths):
     file_size = os.path.getsize(file)
     try:
         img = Image.open(file)
-    except (OSError, Image.UnidentifiedImageError):
+    except (OSError, Image.UnidentifiedImageError, ValueError):
         CTkMessagebox(title="ERROR04", message="File corrupted or doesn't exist!", icon="cancel")
         return None
         # Only touch EXIF at all if the user actually wants it kept
