@@ -291,6 +291,12 @@ def handle_update_result(result):
         update_available.configure(text="Update available!", text_color=("red", "orange"))
         update_available.pack(side="right", padx=20, pady=(0, 5), anchor="s")
         latest_release_url = result.url
+
+        update_messagebox = CTkMessagebox(title="Update available", message=f"A new version of SnapPress is available!\n\nCurrent version: {APP_VER}\nLatest version: {result.version}\n\nDo you want to open the release page?", icon="question", option_1="No", option_2="Yes")
+        
+        response = update_messagebox.get()
+        if response == "Yes":
+            webbrowser.open(latest_release_url)
     elif result.status == "up_to_date":
         update_available.configure(text="Up to date!", text_color=("gray50", "gray60"))
         update_available.pack(side="right", padx=20, pady=(0, 5), anchor="s")

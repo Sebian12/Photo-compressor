@@ -3,7 +3,7 @@ import urllib.request
 import urllib.error
 from collections import namedtuple
 
-UpdateCheckResult = namedtuple("UpdateCheckResult", ["status", "url"])
+UpdateCheckResult = namedtuple("UpdateCheckResult", ["status", "url", "version"])
 
 def get_latest_release():
     url = "https://api.github.com/repos/Sebian12/SnapPress/releases/latest"
@@ -39,9 +39,9 @@ def is_newer(remote, local):
 def check_for_updates(current_version):
     latest_version, release_url = get_latest_release()
     if latest_version is None:
-        return UpdateCheckResult("error", None)
+        return UpdateCheckResult("error", None, None)
 
     if is_newer(latest_version, current_version):
-        return UpdateCheckResult("update_available", release_url)
+        return UpdateCheckResult("update_available", release_url, latest_version)
     else:
-        return UpdateCheckResult("up_to_date", None)
+        return UpdateCheckResult("up_to_date", None, None)
