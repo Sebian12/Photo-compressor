@@ -25,8 +25,9 @@ settings.thumb_size = settings_saver.get("thumb_size", 100)
 settings.preserve_exif = settings_saver.get("preserve_exif", False)
 settings.exif_remove = settings_saver.get("exif_remove", dict(config.DEFAULT_EXIF_REMOVE))
 
-# Megabyte constant
+# Constants
 MB = 1024 * 1024
+APP_VER = "v1.13.0"
 
 utils.resource_path("assets/logo.ico")  # Preload the resource path to avoid issues with PyInstaller
 
@@ -294,7 +295,7 @@ else:
     app.icon_img = icon_img
     app.iconphoto(True, icon_img)
 
-app.geometry("600x750")
+app.geometry("600x700")
 
 # Invicible frame on top of drop_frame and settings button
 top_container = ctk.CTkFrame(app, fg_color="transparent")
@@ -338,7 +339,7 @@ clear_list_btn = ctk.CTkButton(counter_frame, text="Clear list", command=clear_l
 clear_list_btn.pack(side="right", pady=5)
 
 # Shows loaded photos
-files_frame = ctk.CTkScrollableFrame(app, height=300)
+files_frame = ctk.CTkScrollableFrame(app, height=250)
 files_frame.pack(padx=20, fill="x")
 
 # Label that shows how compressed picture will get
@@ -375,6 +376,6 @@ progress.set(0)
 btn_compress = ctk.CTkButton(app, text="Compress and save", command=compress)
 btn_compress.pack(pady=10)
 
-ctk.CTkLabel(app, text="v1.12.2", text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5))
+ctk.CTkLabel(app, text=APP_VER, text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5))
 
 app.mainloop()
