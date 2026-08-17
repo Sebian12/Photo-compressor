@@ -143,7 +143,7 @@ def compress_single_file(file, compress_value, used_paths):
                     if settings.exif_remove[key]:
                         exif_data.pop(tag_id, None)
                         exif_sub_ifd.pop(tag_id, None)
-        except (OSError, Image.UnidentifiedImageError):
+        except (OSError, Image.UnidentifiedImageError, ValueError, AttributeError):
             img.close()
             CTkMessagebox(title="ERROR10", message="Couldn't load exif metadata. File skipped.", icon="cancel")
             return None
@@ -259,10 +259,10 @@ def update_label(value):
     quality_lbl.configure(text=f"Quality: {int(value)}")
 
 # Function that shows settings window
-def show_settings(app):
+def show_settings(app, check_updates):
     global settings_win
     if settings_win is None or not settings_win.winfo_exists():
-        settings_win = settings.open_settings(app)
+        settings_win = settings.open_settings(app, check_updates)
 
 # Function that clears whole list of selected files
 def clear_list():
@@ -279,17 +279,22 @@ def clear_list():
     after_space_lbl.configure(text="New size: -")
     progress.set(0)
 
-def check_updates():
+def check_updates(silent=True):
     result = updater.check_for_updates(APP_VER)
-    app.after(0, lambda: handle_update_result(result))
+    app.after(0, lambda: handle_update_result(result, silent))
 
-def handle_update_result(result):
+def start_update_check(silent):
+    threading.Thread(target=check_updates, args=(silent,), daemon=True).start()
+
+def handle_update_result(result, silent=True):
     if not app.winfo_exists():
         return
     global latest_release_url
     if result.status == "update_available":
         update_available.configure(text="Update available!", text_color=("red", "orange"))
         update_available.pack(side="right", padx=20, pady=(0, 5), anchor="s")
+        update_available.bind("<Button-1>", lambda e: webbrowser.open(latest_release_url))
+        update_available.configure(cursor="hand2")
         latest_release_url = result.url
 
         update_messagebox = CTkMessagebox(title="Update available", message=f"A new version of SnapPress is available!\n\nCurrent version: {APP_VER}\nLatest version: {result.version}\n\nDo you want to open the release page?", icon="question", option_1="No", option_2="Yes")
@@ -298,6 +303,8 @@ def handle_update_result(result):
         if response == "Yes":
             webbrowser.open(latest_release_url)
     elif result.status == "up_to_date":
+        if not silent:
+            CTkMessagebox(title="Up to date", message="You are using the latest version of SnapPress!", icon="check")
         update_available.configure(text="Up to date!", text_color=("gray50", "gray60"))
         update_available.pack(side="right", padx=20, pady=(0, 5), anchor="s")
     elif result.status == "error":
@@ -346,7 +353,7 @@ right_container.pack(side="right")
 # Settings & GitHub buttons / Right side of top_container
 settings_img = Image.open(utils.resource_path("assets/settings.png"))
 settings_icon = ctk.CTkImage(light_image=settings_img, dark_image=settings_img, size=(48, 48))
-settings_button = ctk.CTkButton(right_container, image=settings_icon, text="", command=lambda: show_settings(app), width=40, fg_color=("#E5E5E5", "#313233"), hover_color=("#D0D0D0", "#404142"))
+settings_button = ctk.CTkButton(right_container, image=settings_icon, text="", command=lambda: show_settings(app, start_update_check), width=40, fg_color=("#E5E5E5", "#313233"), hover_color=("#D0D0D0", "#404142"))
 settings_button.pack(side="top", anchor="n", pady=5)
 
 # GitHub button

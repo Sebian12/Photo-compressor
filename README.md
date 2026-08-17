@@ -75,7 +75,7 @@ python main.py
 - [x] Granular metadata control in settings (only GPS data checkbox) (1.10.0)
 - [x] More metadata control in settings (1.11.0)
 - [x] New file format support (1.12.0)
-- [ ] Auto-update checker (1.13.0)
+- [x] Auto-update checker (1.13.0)
 - [ ] Multithreading (1.14.0)
 - [ ] Windows shell integration (1.15.0)
 - [ ] Drag & Drop support (1.16.0)

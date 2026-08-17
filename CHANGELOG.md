@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.13.0
+
+### New Features
+- Added an automatic update checker — checks GitHub's Releases API on startup and via a new "Check for updates" button in Settings, both running in a background thread so the UI never freezes during the check
+- On finding a newer version: shows a dialog with a direct link to the release page, plus a persistent "Update available!" label next to the version number that stays clickable for opening the release page later
+- Manual checks from Settings also report "up to date" or a failed-check message, not just when an update is actually found
+- Added a GitHub button next to the settings icon, opening the repository in the browser
+
+### Bugfixes
+- Fixed a Python 2-style `except OSError, ValueError:` in `compress_single_file()`'s save step — invalid syntax under Python 3, which prevented the app from launching at all
+- Fixed the EXIF-read exception handler (ERROR10) not catching `ValueError`/`AttributeError` — closes a gap left by the v1.12.0 fix, which only handled this for the general file-open step, not EXIF parsing itself
+- Fixed `Image.open()`'s exception handling (ERROR04) not catching `ValueError`
+- Added `ERROR11` for when every file in a batch fails to compress — previously the app returned silently with no summary or message at all
+
+### UI/UX
+- Settings icon button and GitHub button are now stacked vertically in their own container on the right side of the header, instead of a single standalone icon button
+
 ## v1.12.2
 
 ### UI/UX

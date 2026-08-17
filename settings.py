@@ -78,7 +78,7 @@ def show_exif_options(app):
         exif_window.lift()
         exif_window.focus_force()
 
-def open_settings(app):
+def open_settings(app, check_updates_callback):
     settings_window = ctk.CTkToplevel(master=app)
     settings_window.title("Settings")
     settings_window.geometry("300x375")
@@ -115,6 +115,9 @@ def open_settings(app):
     switch_mode.pack(side="top", fill="x", padx=10, pady=5)
     switch_exif.pack(side="top", fill="x", padx=10)
     exif_button.pack(side="top", fill="x", padx=10, pady=5)
+
+    update_button = ctk.CTkButton(settings_window, text="Check for updates", command=lambda: check_updates_callback(silent=False))
+    update_button.pack(side="bottom", fill="x", padx=10, pady=5)
 
     folder_button.pack(side="bottom", fill="x", padx=10, pady=5)
     folder_label.pack(side="bottom", fill="x", padx=10, pady=1)
