@@ -6,9 +6,10 @@ from CTkMessagebox import CTkMessagebox
 from PIL import Image
 import sys
 import platform
+import threading
 
 # File import
-import settings, config, utils
+import settings, config, utils, updater
 
 # Important global variables
 selected_files = []
@@ -16,6 +17,7 @@ settings_win = None
 file_labels = {}
 thumbnail_refs = {}
 remove_buttons = {}
+latest_release_url = None
 
 # Load settings
 settings_saver = config.load_config()
@@ -277,6 +279,25 @@ def clear_list():
     after_space_lbl.configure(text="New size: -")
     progress.set(0)
 
+def check_updates():
+    result = updater.check_for_updates(APP_VER)
+    app.after(0, lambda: handle_update_result(result))
+
+def handle_update_result(result):
+    if not app.winfo_exists():
+        return
+    global latest_release_url
+    if result.status == "update_available":
+        update_available.configure(text="Update available!", text_color=("red", "orange"))
+        update_available.pack(side="right", padx=20, pady=(0, 5), anchor="s")
+        latest_release_url = result.url
+    elif result.status == "up_to_date":
+        update_available.configure(text="Up to date!", text_color=("gray50", "gray60"))
+        update_available.pack(side="right", padx=20, pady=(0, 5), anchor="s")
+    elif result.status == "error":
+        update_available.configure(text="Update check failed!", text_color=("red", "orange"))
+        update_available.pack(side="right", padx=20, pady=(0, 5),anchor="s")
+
 # Theme
 ctk.set_appearance_mode(settings.appearance_mode)
 ctk.set_default_color_theme("blue")
@@ -376,6 +397,12 @@ progress.set(0)
 btn_compress = ctk.CTkButton(app, text="Compress and save", command=compress)
 btn_compress.pack(pady=10)
 
-ctk.CTkLabel(app, text=APP_VER, text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5))
+bottom_container = ctk.CTkFrame(app, fg_color="transparent")
+bottom_container.pack(fill="x", padx=20, pady=(0, 10))
 
+ctk.CTkLabel(bottom_container, text=APP_VER, text_color=("gray50", "gray60")).pack(padx=20, pady=(0, 5), side="left", anchor="s")
+update_available = ctk.CTkLabel(bottom_container, text="", text_color=("black", "white"))
+
+
+threading.Thread(target=check_updates, daemon=True).start()
 app.mainloop()
