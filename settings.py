@@ -55,7 +55,6 @@ def update_thumbnail_size(value, label):
     global thumb_size
     thumb_size = value
     label.configure(text=f"Thumbnail size: {int(value)}")
-    save_settings()
 
 # Function to select output folder
 def select_folder(label):

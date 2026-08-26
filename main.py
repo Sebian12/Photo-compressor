@@ -29,7 +29,7 @@ settings.exif_remove = settings_saver.get("exif_remove", dict(config.DEFAULT_EXI
 
 # Constants
 MB = 1024 * 1024
-APP_VER = "v1.13.0"
+APP_VER = "v1.13.1"
 
 utils.resource_path("assets/logo.ico")  # Preload the resource path to avoid issues with PyInstaller
 
@@ -306,9 +306,11 @@ def handle_update_result(result, silent=True):
         if not silent:
             CTkMessagebox(title="Up to date", message="You are using the latest version of SnapPress!", icon="check")
         update_available.configure(text="Up to date!", text_color=("gray50", "gray60"))
+        update_available.unbind("<Button-1>")
         update_available.pack(side="right", padx=20, pady=(0, 5), anchor="s")
     elif result.status == "error":
         update_available.configure(text="Update check failed!", text_color=("red", "orange"))
+        update_available.unbind("<Button-1>")
         update_available.pack(side="right", padx=20, pady=(0, 5),anchor="s")
 
 # Theme
